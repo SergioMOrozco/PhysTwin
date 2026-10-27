@@ -28,7 +28,7 @@ for dir_name in dir_names:
     # Need to prepare the video
     for i in range(3):
         # Process each camera
-        fourcc = cv2.VideoWriter_fourcc(*"avc1")  # Codec for .mp4 file format
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")  # Codec for .mp4 file format
         video_writer = cv2.VideoWriter(
             f"{prediction_dir}/{case_name}/{i}_integrate.mp4",
             fourcc,
