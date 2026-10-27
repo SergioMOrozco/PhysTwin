@@ -7,6 +7,7 @@ import glob
 import cv2
 import numpy as np
 import os
+import json
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
@@ -21,8 +22,13 @@ args = parser.parse_args()
 base_path = args.base_path
 case_name = args.case_name
 
-num_cam = 3
-assert len(glob.glob(f"{base_path}/{case_name}/depth/*")) == num_cam
+with open(f"{base_path}/{case_name}/metadata.json", "r") as f:
+    metadata = json.load(f)
+num_cam = len(metadata["intrinsics"])
+depth_camera_num = len(glob.glob(f"{base_path}/{case_name}/depth/*"))
+assert depth_camera_num == num_cam, (
+    f"metadata declares {num_cam} cameras, but found {depth_camera_num} depth directories"
+)
 device = "cuda"
 
 

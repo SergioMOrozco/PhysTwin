@@ -1,6 +1,7 @@
 # Process to get the masks of the controller and the object
 import os
 import glob
+import json
 from argparse import ArgumentParser
 
 parser = ArgumentParser()
@@ -16,8 +17,13 @@ args = parser.parse_args()
 base_path = args.base_path
 case_name = args.case_name
 TEXT_PROMPT = args.TEXT_PROMPT
-camera_num = 3
-assert len(glob.glob(f"{base_path}/{case_name}/depth/*")) == camera_num
+with open(f"{base_path}/{case_name}/metadata.json", "r") as f:
+    metadata = json.load(f)
+camera_num = len(metadata["intrinsics"])
+depth_camera_num = len(glob.glob(f"{base_path}/{case_name}/depth/*"))
+assert depth_camera_num == camera_num, (
+    f"metadata declares {camera_num} cameras, but found {depth_camera_num} depth directories"
+)
 print(f"Processing {case_name}")
 
 for camera_idx in range(camera_num):
